@@ -9,21 +9,22 @@ local function focusCamera(x, y)
     
     if not camera then camera = Camera(0, 0) end
     
-    local sx, sy = convertToScreen(x, y)
+    local sx, sy = convertToScreen(x, y, 0)
     camera:lookAt(sx, sy)
 end
 
 
 function state_ingame:enter()
     updateScreen()
-    focusCamera(0, 0)
+    focusCamera(4, 4)
     tiles = {}
     for x = 1,grid.xs do
         tiles[x] = {}
         for y = 1,grid.ys do
-            tiles[x][y] = "grass"
+            tiles[x][y] = { z = 0, tile = math.random(1,2)}
         end
     end
+    tiles[3][4].z = 1
 end
 
 
@@ -34,12 +35,15 @@ end
 
 function state_ingame:draw()
     camera:attach()
-    for x = #tiles,1,-1 do
+    for x = 1,#tiles,1 do
         for y = 1,#tiles[x] do
             if tiles[x] and tiles[x][y] then
-                local sx,sy = convertToScreen(x, y)
-                --love.graphics.rectangle("line", sx, sy, grid.w, grid.h)
-                love.graphics.draw(Image.tile, sx - grid.w * 0.5, sy)
+                local sx,sy = convertToScreen(x, y, tiles[x][y].z)
+                if tiles[x][y].tile == 1 then
+                    love.graphics.draw(Image.tile, sx - grid.w * 0.5, sy)
+                else
+                    love.graphics.draw(Image.grass, sx - grid.w * 0.5, sy)
+                end
             end
         end
     end
