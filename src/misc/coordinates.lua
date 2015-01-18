@@ -8,8 +8,8 @@ grid = {
 }
 
 function convertToMap(x, y, z)
-    local mx = math.floor((x / (grid.w * 0.5) + y / (grid.h * 0.5)) * 0.5)
-    local my = math.floor((y / (grid.h * 0.5) - x / (grid.w * 0.5)) * 0.5)
+    local mx = (x / (grid.w * 0.5) + y / (grid.h * 0.5)) * 0.5
+    local my = (y / (grid.h * 0.5) - x / (grid.w * 0.5)) * 0.5
     return mx, my
 end
 

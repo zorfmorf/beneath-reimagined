@@ -24,7 +24,7 @@ color = {
 
 -- load ressources
 Image = Proxy(function(k) return love.graphics.newImage('img/' .. k .. '.png') end)
-
+require "src.misc.tiles"
 
 function updateScreen()
     screen = {
