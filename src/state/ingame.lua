@@ -2,31 +2,29 @@
 state_ingame = Gamestate.new()
 
 local tiles = nil -- contains map
-local camera = nil -- camera object
+camera = nil -- camera object
 local holdmouse = nil -- contains last mouse coordinates if camera is currently dragged
 
 -- focus camera on map position
-local function focusCamera(x, y)
+local function focusMapPos(x, y)
     
     if not camera then camera = Camera(0, 0) end
     
     local sx, sy = convertToScreen(x, y, 0)
-    camera:lookAt(sx - screen.w / 2, sy)
+    camera:lookAt(sx, sy)
 end
 
 
 function state_ingame:enter()
     updateScreen()
-    focusCamera(4, 4)
+    focusMapPos(0, 0)
     tiles = {}
     for x = 1,grid.xs do
         tiles[x] = {}
         for y = 1,grid.ys do
-            tiles[x][y] = { z = 0, tile = 3, build = nil}
+            tiles[x][y] = { z = 0, tile = 4, build = nil}
         end
     end
-    tiles[3][4] = { z = 1, tile = 1}
-    tiles[6][6].build = 1
 end
 
 
@@ -45,9 +43,15 @@ function state_ingame:draw()
         for y = 1,#tiles[x] do
             if tiles[x] and tiles[x][y] then
                 local sx,sy = convertToScreen(x, y, tiles[x][y].z)
+                
+                love.graphics.setColor(255, 255, 255, 255)
+                if tiles[x][y].selected or x == 8 and y == 2 then
+                    love.graphics.setColor(255, 0, 9, 255)
+                end
+                
                 love.graphics.draw(Tile[tiles[x][y].tile], sx - grid.w * 0.5, sy)
                 
-                if tiles[x][y].build then
+                if tiles[x][y].build then                    
                     local img = Build[tiles[x][y].build]
                     love.graphics.draw(img, sx - grid.w * 0.5, sy, 0, 1, 1, 0, img:getHeight() - grid.h)
                 end
@@ -60,8 +64,10 @@ end
 
 function state_ingame:mousepressed(x, y, button)
     if button == "l" then
-        local mx, my = convertToMap(x, y)
-        print(mx, my)
+        local mx, my = convertToMap(camera:worldCoords(x, y))
+        if tiles[math.floor(mx)] and tiles[math.floor(mx)][math.floor(my)] then
+            tiles[math.floor(mx)][math.floor(my)].selected = true
+        end
     end
     if button == "r" then
         holdmouse = { x, y}
