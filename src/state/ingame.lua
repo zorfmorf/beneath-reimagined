@@ -2,22 +2,26 @@
 state_ingame = Gamestate.new()
 
 local tiles = nil -- contains map
-camera = nil -- camera object
+local camera = nil -- camera object
 local holdmouse = nil -- contains last mouse coordinates if camera is currently dragged
 
 -- focus camera on map position
 local function focusMapPos(x, y)
-    
-    if not camera then camera = Camera(0, 0) end
-    
     local sx, sy = convertToScreen(x, y, 0)
     camera:lookAt(sx, sy)
 end
 
 
+-- Called once whenever entering state
 function state_ingame:enter()
+    
+    -- update screen and camera coordinates
     updateScreen()
+    camera = Camera(0, 0)
     focusMapPos(0, 0)
+    
+    -- generate/load tile grid
+    -- TODO: remove placeholder grid and load from map file/generator
     tiles = {}
     for x = 1,grid.xs do
         tiles[x] = {}
@@ -28,7 +32,11 @@ function state_ingame:enter()
 end
 
 
+-- Everything is updated here
 function state_ingame:update(dt)
+    -- todo: update objects
+    
+    -- move camera if user is currently dragging
     if holdmouse then 
         local mx, my = love.mouse.getPosition()
         camera:move(holdmouse[1] - mx, holdmouse[2] - my)
@@ -37,7 +45,10 @@ function state_ingame:update(dt)
 end
 
 
+-- All draw calls go in here
 function state_ingame:draw()
+    
+    -- draw game world
     camera:attach()
     for x = 1,#tiles,1 do
         for y = 1,#tiles[x] do
@@ -51,7 +62,7 @@ function state_ingame:draw()
                 
                 love.graphics.draw(Tile[tiles[x][y].tile], sx - grid.w * 0.5, sy)
                 
-                if tiles[x][y].build then                    
+                if tiles[x][y].build then
                     local img = Build[tiles[x][y].build]
                     love.graphics.draw(img, sx - grid.w * 0.5, sy, 0, 1, 1, 0, img:getHeight() - grid.h)
                 end
@@ -59,6 +70,8 @@ function state_ingame:draw()
         end
     end
     camera:detach()
+    
+    -- draw hud
 end
 
 
