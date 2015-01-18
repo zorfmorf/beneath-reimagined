@@ -22,10 +22,11 @@ function state_ingame:enter()
     for x = 1,grid.xs do
         tiles[x] = {}
         for y = 1,grid.ys do
-            tiles[x][y] = { z = 0, tile = 3}
+            tiles[x][y] = { z = 0, tile = 3, build = nil}
         end
     end
     tiles[3][4] = { z = 1, tile = 1}
+    tiles[6][6].build = 1
 end
 
 
@@ -45,6 +46,11 @@ function state_ingame:draw()
             if tiles[x] and tiles[x][y] then
                 local sx,sy = convertToScreen(x, y, tiles[x][y].z)
                 love.graphics.draw(Tile[tiles[x][y].tile], sx - grid.w * 0.5, sy)
+                
+                if tiles[x][y].build then
+                    local img = Build[tiles[x][y].build]
+                    love.graphics.draw(img, sx - grid.w * 0.5, sy, 0, 1, 1, 0, img:getHeight() - grid.h)
+                end
             end
         end
     end
