@@ -17,8 +17,8 @@ grid = {
     w = 128, -- tile width
     h = 64, -- tile height
     z = 78, -- tile z height (game may not use layered terrain but it is supported.
-    xs = 30, -- map width
-    ys = 30 -- map height
+    xs = 20, -- map width
+    ys = 20 -- map height
 }
 
 

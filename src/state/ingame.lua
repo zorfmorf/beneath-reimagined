@@ -29,6 +29,15 @@ function state_ingame:enter()
             tiles[x][y] = { z = 0, tile = 4, build = nil}
         end
     end
+    tiles[2][2].tile = 5
+    tiles[2][1].tile = 9
+    tiles[3][1].tile = 6
+    tiles[4][3].tile = 10
+    tiles[4][2].tile = 7
+    tiles[3][3].tile = 8
+    tiles[2][3].tile = 11
+    tiles[4][1].tile = 12
+    tiles[3][2].tile = 13
 end
 
 
@@ -50,17 +59,19 @@ function state_ingame:draw()
     
     -- draw game world
     camera:attach()
+    love.graphics.setDefaultFilter("nearest", "nearest")
     for x = 1,#tiles,1 do
         for y = 1,#tiles[x] do
             if tiles[x] and tiles[x][y] then
                 local sx,sy = convertToScreen(x, y, tiles[x][y].z)
                 
                 love.graphics.setColor(255, 255, 255, 255)
-                if tiles[x][y].selected or x == 8 and y == 2 then
+                if tiles[x][y].selected then
                     love.graphics.setColor(255, 0, 9, 255)
                 end
                 
                 love.graphics.draw(Tile[tiles[x][y].tile], sx - grid.w * 0.5, sy)
+                --love.graphics.line(sx, sy, sx + grid.w * 0.5, sy + grid.h * 0.5, sx, sy + grid.h, sx - grid.w * 0.5, sy + grid.h * 0.5, sx, sy)
                 
                 if tiles[x][y].build then
                     local img = Build[tiles[x][y].build]
@@ -72,6 +83,7 @@ function state_ingame:draw()
     camera:detach()
     
     -- draw hud
+    
 end
 
 
@@ -79,7 +91,7 @@ function state_ingame:mousepressed(x, y, button)
     if button == "l" then
         local mx, my = convertToMap(camera:worldCoords(x, y))
         if tiles[math.floor(mx)] and tiles[math.floor(mx)][math.floor(my)] then
-            tiles[math.floor(mx)][math.floor(my)].selected = true
+            tiles[math.floor(mx)][math.floor(my)].selected = not tiles[math.floor(mx)][math.floor(my)].selected
         end
     end
     if button == "r" then
