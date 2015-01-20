@@ -14,6 +14,7 @@ Tile[10] = Image.t_edge_s
 Tile[11] = Image.t_edge_w
 Tile[12] = Image.t_edge_e
 Tile[13] = Image.t_floor
+Tile[14] = Image.t_test
 
 
 Build = {}
