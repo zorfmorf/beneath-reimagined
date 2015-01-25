@@ -29,15 +29,9 @@ function state_ingame:enter()
             tiles[x][y] = { z = 0, tile = 4, build = nil}
         end
     end
-    tiles[2][2].tile = 5
-    tiles[2][1].tile = 9
-    tiles[3][1].tile = 6
-    tiles[4][3].tile = 10
-    tiles[4][2].tile = 7
-    tiles[3][3].tile = 8
-    tiles[2][3].tile = 11
-    tiles[4][1].tile = 12
-    tiles[3][2].tile = 13
+    tiles[4][3].build = 15
+    tiles[5][3].build = 16
+    tiles[5][4].build = 16
 end
 
 
@@ -74,7 +68,7 @@ function state_ingame:draw()
                 --love.graphics.line(sx, sy, sx + grid.w * 0.5, sy + grid.h * 0.5, sx, sy + grid.h, sx - grid.w * 0.5, sy + grid.h * 0.5, sx, sy)
                 
                 if tiles[x][y].build then
-                    local img = Build[tiles[x][y].build]
+                    local img = Tile[tiles[x][y].build]
                     love.graphics.draw(img, sx - grid.w * 0.5, sy, 0, 1, 1, 0, img:getHeight() - grid.h)
                 end
             end
