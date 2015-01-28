@@ -42,43 +42,76 @@ end
 
 -- Everything is updated here
 function state_ingame:update(dt)
-    -- todo: update objects
+    
+    local mx, my = love.mouse.getPosition()
     
     -- move camera if user is currently dragging
     if holdmouse then 
-        local mx, my = love.mouse.getPosition()
         camera:move(holdmouse[1] - mx, holdmouse[2] - my)
         holdmouse = {mx, my}
     end
     
+    local xt = math.floor(screen.w / CAMERA_THRESHOLD)
+    local yt = math.floor(screen.h / CAMERA_THRESHOLD)
+    
+    if mx < xt then camera:move(-CAMERA_SPEED * dt, 0) end
+    if mx > screen.w - xt then camera:move(CAMERA_SPEED * dt, 0) end
+    if my < yt then camera:move(0, -CAMERA_SPEED * dt) end
+    if my > screen.h - yt then camera:move(0, CAMERA_SPEED * dt) end
+    
     -- update hud
-    Gui.group.push{grow = "down", pos = {screen.w - 100, 0}}
     
-    if Gui.Button{id = "btn_build", text = "Build"} then
-        menu_open.build = not menu_open.build
-    end
-    
-    Gui.group.pop{}
-    
-    if menu_open.build then
-        Gui.group.push{grow = "down", pos = {screen.w - 200, 0}}
+    if not buildmode then
         
-        if Gui.Button{id = "btn_build_corridor", text = "Corridor"} then
-            buildmode = Corridor()
-            menu_open.build = false
+        Gui.group.push{grow = "down", pos = {screen.w - 100, 0}}
+        if Gui.Button{id = "btn_build", text = "Build"} then
+            menu_open.build = not menu_open.build
         end
-        
-        if Gui.Button{id = "btn_build_housing", text = "Housing"} then
-            buildmode = Housing()
-            menu_open.build = false
-        end
-        
-        Gui.Button{id = "btn_build_barracks", text = "Barracks"}
-        
-        Gui.Button{id = "btn_build_labs", text = "Labs"}
-        
         Gui.group.pop{}
+        
+        -- build menu if opened
+        if menu_open.build then
+            Gui.group.push{grow = "down", pos = {screen.w - 200, 0}}
+                        
+            if Gui.Button{id = "btn_build_corridor", text = "Corridor"} then
+                buildmode = Corridor()
+                menu_open.build = false
+            end
+            
+            if Gui.Button{id = "btn_build_housing", text = "Housing"} then
+                buildmode = Housing()
+                menu_open.build = false
+            end
+            
+            if Gui.Button{id = "btn_build_barracks", text = "Barracks"} then
+                buildmode = Barracks()
+                menu_open.build = false
+            end
+            
+            if Gui.Button{id = "btn_build_labs", text = "Labs"} then
+                buildmode = Laboratory()
+                menu_open.build = false
+            end
+            
+            Gui.group.pop{}
+        end
+        
+        -- Turn counter and other stuff
+        Gui.group.push{grow = "right", pos = {screen.w - 100, screen.h - 30}}
+        if Gui.Button{id = "btn_turn", text = "End Turn"} then
+            
+        end
+        Gui.group.pop{}
+        
+        -- Debug information
+        Gui.group.push{grow = "down", pos = {0, 0}}
+        if Gui.Label{text = "FPS: " .. love.timer.getFPS()} then
+            
+        end
+        Gui.group.pop{}
+        
     end
+    
 end
 
 
@@ -124,18 +157,20 @@ function state_ingame:draw()
     camera:detach()
     
     -- draw hud
-    if not buildmode then Gui.core.draw() end
+    Gui.core.draw()
 end
 
 
 function state_ingame:mousepressed(x, y, button)
     if button == "l" then
-        local mx, my = convertToMap(camera:worldCoords(x, y))
-        mx = math.floor(mx)
-        my = math.floor(my)
-        if Logic.placeable(mx, my) then
-            Logic.place(mx, my, buildmode)
-            buildmode = nil
+        if buildmode then
+            local mx, my = convertToMap(camera:worldCoords(x, y))
+            mx = math.floor(mx)
+            my = math.floor(my)
+            if Logic.placeable(mx, my) then
+                Logic.place(mx, my, buildmode)
+                buildmode = nil
+            end
         end
     end
     if button == "r" then
@@ -146,10 +181,10 @@ function state_ingame:mousepressed(x, y, button)
         end
     end
     if button == "wu" then
-        camera:zoom(2)
+        --camera:zoom(2)
     end
     if button == "wd" then
-        camera:zoom(0.5)
+        --camera:zoom(0.5)
     end
 end
 

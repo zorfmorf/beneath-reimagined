@@ -6,10 +6,13 @@ Gui = require "lib.quickie"
 Color = require "src.misc.color"
 require "src.misc.gradient"
 require "src.misc.coordinates"
+require "src.misc.settings"
 require "src.state.ingame"
 require "src.building.building"
 require "src.building.corridor"
 require "src.building.housing"
+require "src.building.barracks"
+require "src.building.lab"
 Logic = require "src.game.logic"
 
 -- Creates a proxy via rawset.
@@ -35,7 +38,7 @@ require "src.misc.tiles"
 function updateScreen()
     screen = {
         w = love.graphics.getWidth(),
-        h = (love.graphics.getWidth() / 768) * 600
+        h = love.graphics.getHeight()
     }
 end
 
@@ -43,6 +46,7 @@ function love.load()
     math.randomseed(os.time())
     Gamestate.registerEvents()
     Gamestate.switch(state_ingame)
+    Gui.core.style = require "src.misc.style" --load unique style
 end
 
 

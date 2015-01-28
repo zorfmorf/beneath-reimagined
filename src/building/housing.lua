@@ -12,6 +12,6 @@ end
 
 
 function Housing:draw(sx, sy)
-    local img = Image.t_lab
+    local img = Image.t_housing
     self:superdraw(sx, sy, img)
 end

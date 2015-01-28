@@ -1,6 +1,7 @@
 
 Corridor = Class{__includes = Building}
 
+
 function Corridor:init()
     
 end
