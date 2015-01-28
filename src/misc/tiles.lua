@@ -13,10 +13,6 @@ Tile[9] = Image.t_edge_n
 Tile[10] = Image.t_edge_s
 Tile[11] = Image.t_edge_w
 Tile[12] = Image.t_edge_e
-Tile[13] = Image.t_floor
-Tile[14] = Image.t_test
-Tile[15] = Image.t_lab
-Tile[16] = Image.t_corridor
 
 
 Build = {}

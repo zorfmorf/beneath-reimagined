@@ -1,7 +1,7 @@
 
 state_ingame = Gamestate.new()
 
-local tiles = nil -- contains map
+tiles = nil -- contains map
 local camera = nil -- camera object
 local holdmouse = nil -- contains last mouse coordinates if camera is currently dragged
 
@@ -12,13 +12,21 @@ local function focusMapPos(x, y)
 end
 
 
+-- if not nil, it contains the building the player wants to build
+local buildmode = nil
+
+local menu_open = {
+    build = false
+}
+
+
 -- Called once whenever entering state
 function state_ingame:enter()
     
     -- update screen and camera coordinates
     updateScreen()
     camera = Camera(0, 0)
-    focusMapPos(0, 0)
+    focusMapPos(5, 5)
     
     -- generate/load tile grid
     -- TODO: remove placeholder grid and load from map file/generator
@@ -29,9 +37,6 @@ function state_ingame:enter()
             tiles[x][y] = { z = 0, tile = 4, build = nil}
         end
     end
-    tiles[4][3].build = 15
-    tiles[5][3].build = 16
-    tiles[5][4].build = 16
 end
 
 
@@ -44,6 +49,35 @@ function state_ingame:update(dt)
         local mx, my = love.mouse.getPosition()
         camera:move(holdmouse[1] - mx, holdmouse[2] - my)
         holdmouse = {mx, my}
+    end
+    
+    -- update hud
+    Gui.group.push{grow = "down", pos = {screen.w - 100, 0}}
+    
+    if Gui.Button{id = "btn_build", text = "Build"} then
+        menu_open.build = not menu_open.build
+    end
+    
+    Gui.group.pop{}
+    
+    if menu_open.build then
+        Gui.group.push{grow = "down", pos = {screen.w - 200, 0}}
+        
+        if Gui.Button{id = "btn_build_corridor", text = "Corridor"} then
+            buildmode = Corridor()
+            menu_open.build = false
+        end
+        
+        if Gui.Button{id = "btn_build_housing", text = "Housing"} then
+            buildmode = Housing()
+            menu_open.build = false
+        end
+        
+        Gui.Button{id = "btn_build_barracks", text = "Barracks"}
+        
+        Gui.Button{id = "btn_build_labs", text = "Labs"}
+        
+        Gui.group.pop{}
     end
 end
 
@@ -59,7 +93,7 @@ function state_ingame:draw()
             if tiles[x] and tiles[x][y] then
                 local sx,sy = convertToScreen(x, y, tiles[x][y].z)
                 
-                love.graphics.setColor(255, 255, 255, 255)
+                love.graphics.setColor(Color.default)
                 if tiles[x][y].selected then
                     love.graphics.setColor(255, 0, 9, 255)
                 end
@@ -68,28 +102,48 @@ function state_ingame:draw()
                 --love.graphics.line(sx, sy, sx + grid.w * 0.5, sy + grid.h * 0.5, sx, sy + grid.h, sx - grid.w * 0.5, sy + grid.h * 0.5, sx, sy)
                 
                 if tiles[x][y].build then
-                    local img = Tile[tiles[x][y].build]
-                    love.graphics.draw(img, sx - grid.w * 0.5, sy, 0, 1, 1, 0, img:getHeight() - grid.h)
+                    tiles[x][y].build:draw(sx, sy)
                 end
             end
         end
     end
+    
+    -- draw build preview if in buildmode
+    if buildmode then
+        local mx, my = convertToMap(camera:worldCoords(love.mouse.getPosition()))
+        mx = math.floor(mx)
+        my = math.floor(my)
+        
+        love.graphics.setColor(Color.nbuildable)
+        if Logic.placeable(mx, my) then
+            love.graphics.setColor(Color.buildable)
+        end
+        buildmode:draw(convertToScreen(mx, my))
+    end
+    
     camera:detach()
     
     -- draw hud
-    
+    if not buildmode then Gui.core.draw() end
 end
 
 
 function state_ingame:mousepressed(x, y, button)
     if button == "l" then
         local mx, my = convertToMap(camera:worldCoords(x, y))
-        if tiles[math.floor(mx)] and tiles[math.floor(mx)][math.floor(my)] then
-            tiles[math.floor(mx)][math.floor(my)].selected = not tiles[math.floor(mx)][math.floor(my)].selected
+        mx = math.floor(mx)
+        my = math.floor(my)
+        if Logic.placeable(mx, my) then
+            Logic.place(mx, my, buildmode)
+            buildmode = nil
         end
     end
     if button == "r" then
-        holdmouse = { x, y}
+        if buildmode then
+            buildmode = nil
+        else
+            holdmouse = { x, y}
+        end
     end
     if button == "wu" then
         camera:zoom(2)

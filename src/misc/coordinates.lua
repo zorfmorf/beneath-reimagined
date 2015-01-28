@@ -27,6 +27,7 @@ grid = {
 -- CAUTION: when calling make sure not to call with camera coordinates!
 -- z is currently ignored because z-layers are not fully implemented/supported
 function convertToMap(x, y, z)
+    if not z then z = 0 end
     local mx = y / grid.h + x / grid.w
     local my = y / grid.h - x / grid.w
     return mx, my
@@ -36,6 +37,7 @@ end
 -- Convert map coordinates (object grid) to coordinates used to draw on screen
 -- inverse to convertToMap
 function convertToScreen(x, y, z)
+    if not z then z = 0 end
     local sx = (x - y) * grid.w * 0.5
     local sy = (x + y) * grid.h * 0.5 - z * grid.z
     return sx, sy

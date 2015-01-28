@@ -2,9 +2,15 @@
 Gamestate = require "lib.hump.gamestate"
 Camera = require "lib.hump.camera"
 Class = require "lib.hump.class"
+Gui = require "lib.quickie"
+Color = require "src.misc.color"
 require "src.misc.gradient"
 require "src.misc.coordinates"
 require "src.state.ingame"
+require "src.building.building"
+require "src.building.corridor"
+require "src.building.housing"
+Logic = require "src.game.logic"
 
 -- Creates a proxy via rawset.
 -- Credit goes to vrld: https://github.com/vrld/Princess/blob/master/main.lua
