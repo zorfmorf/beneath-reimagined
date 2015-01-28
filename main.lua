@@ -1,11 +1,11 @@
 
 Gamestate = require "lib.hump.gamestate"
-Camera = require "lib.hump.camera"
 Class = require "lib.hump.class"
 Gui = require "lib.quickie"
-Color = require "src.misc.color"
+Color = require "src.view.color"
+require "src.view.coordinates"
+Camera = require "src.view.camwrapper"
 require "src.misc.gradient"
-require "src.misc.coordinates"
 require "src.misc.settings"
 require "src.state.ingame"
 require "src.building.building"
@@ -46,7 +46,7 @@ function love.load()
     math.randomseed(os.time())
     Gamestate.registerEvents()
     Gamestate.switch(state_ingame)
-    Gui.core.style = require "src.misc.style" --load unique style
+    Gui.core.style = require "src.view.style" --load unique style
 end
 
 

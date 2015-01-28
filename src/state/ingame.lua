@@ -2,14 +2,6 @@
 state_ingame = Gamestate.new()
 
 tiles = nil -- contains map
-local camera = nil -- camera object
-local holdmouse = nil -- contains last mouse coordinates if camera is currently dragged
-
--- focus camera on map position
-local function focusMapPos(x, y)
-    local sx, sy = convertToScreen(x, y, 0)
-    camera:lookAt(sx, sy)
-end
 
 
 -- if not nil, it contains the building the player wants to build
@@ -25,8 +17,8 @@ function state_ingame:enter()
     
     -- update screen and camera coordinates
     updateScreen()
-    camera = Camera(0, 0)
-    focusMapPos(5, 5)
+    Camera.init()
+    Camera.focusMapPos(5, 5)
     
     -- generate/load tile grid
     -- TODO: remove placeholder grid and load from map file/generator
@@ -43,24 +35,9 @@ end
 -- Everything is updated here
 function state_ingame:update(dt)
     
-    local mx, my = love.mouse.getPosition()
-    
-    -- move camera if user is currently dragging
-    if holdmouse then 
-        camera:move(holdmouse[1] - mx, holdmouse[2] - my)
-        holdmouse = {mx, my}
-    end
-    
-    local xt = math.floor(screen.w / CAMERA_THRESHOLD)
-    local yt = math.floor(screen.h / CAMERA_THRESHOLD)
-    
-    if mx < xt then camera:move(-CAMERA_SPEED * dt, 0) end
-    if mx > screen.w - xt then camera:move(CAMERA_SPEED * dt, 0) end
-    if my < yt then camera:move(0, -CAMERA_SPEED * dt) end
-    if my > screen.h - yt then camera:move(0, CAMERA_SPEED * dt) end
+    Camera.update(dt)
     
     -- update hud
-    
     if not buildmode then
         
         Gui.group.push{grow = "down", pos = {screen.w - 100, 0}}
@@ -119,7 +96,7 @@ end
 function state_ingame:draw()
     
     -- draw game world
-    camera:attach()
+    Camera.attach()
     love.graphics.setDefaultFilter("nearest", "nearest")
     for x = 1,#tiles,1 do
         for y = 1,#tiles[x] do
@@ -143,7 +120,7 @@ function state_ingame:draw()
     
     -- draw build preview if in buildmode
     if buildmode then
-        local mx, my = convertToMap(camera:worldCoords(love.mouse.getPosition()))
+        local mx, my = convertToMap(Camera.worldCoords(love.mouse.getPosition()))
         mx = math.floor(mx)
         my = math.floor(my)
         
@@ -154,7 +131,7 @@ function state_ingame:draw()
         buildmode:draw(convertToScreen(mx, my))
     end
     
-    camera:detach()
+    Camera.detach()
     
     -- draw hud
     Gui.core.draw()
@@ -164,7 +141,7 @@ end
 function state_ingame:mousepressed(x, y, button)
     if button == "l" then
         if buildmode then
-            local mx, my = convertToMap(camera:worldCoords(x, y))
+            local mx, my = convertToMap(Camera.worldCoords(x, y))
             mx = math.floor(mx)
             my = math.floor(my)
             if Logic.placeable(mx, my) then
@@ -177,7 +154,7 @@ function state_ingame:mousepressed(x, y, button)
         if buildmode then
             buildmode = nil
         else
-            holdmouse = { x, y}
+            Camera.startDrag(x, y)
         end
     end
     if button == "wu" then
@@ -191,6 +168,6 @@ end
 
 function state_ingame:mousereleased(x, y, button)
     if button == "r" then
-        holdmouse = nil
+        Camera.endDrag()
     end
 end
