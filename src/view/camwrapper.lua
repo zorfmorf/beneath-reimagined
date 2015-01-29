@@ -55,13 +55,15 @@ local function update(dt)
         holdmouse = {mx, my}
     end
     
-    local xt = math.floor(screen.w / CAMERA_THRESHOLD)
-    local yt = math.floor(screen.h / CAMERA_THRESHOLD)
-    
-    if mx < xt then movecollector[1] = movecollector[1] - CAMERA_SPEED * dt end
-    if mx > screen.w - xt then movecollector[1] = movecollector[1] + CAMERA_SPEED * dt end
-    if my < yt then movecollector[2] = movecollector[2] - CAMERA_SPEED * dt end
-    if my > screen.h - yt then movecollector[2] = movecollector[2] + CAMERA_SPEED * dt end
+    if CAMERA_SIDE_MOV and love.window.hasMouseFocus() then
+        local xt = math.floor(screen.w / CAMERA_THRESHOLD)
+        local yt = math.floor(screen.h / CAMERA_THRESHOLD)
+        
+        if mx < xt then movecollector[1] = movecollector[1] - CAMERA_SPEED * dt end
+        if mx > screen.w - xt then movecollector[1] = movecollector[1] + CAMERA_SPEED * dt end
+        if my < yt then movecollector[2] = movecollector[2] - CAMERA_SPEED * dt end
+        if my > screen.h - yt then movecollector[2] = movecollector[2] + CAMERA_SPEED * dt end
+    end
     
     if movecollector[1] > 1 then
         camera:move(math.floor(movecollector[1]), 0)
