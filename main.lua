@@ -4,17 +4,9 @@ Class = require "lib.hump.class"
 Gui = require "lib.quickie"
 Color = require "src.view.color"
 require "src.view.coordinates"
-Camera = require "src.view.camwrapper"
-Game = require "src.game.gamestate"
 require "src.misc.gradient"
 require "src.misc.settings"
 require "src.state.ingame"
-require "src.building.building"
-require "src.building.corridor"
-require "src.building.housing"
-require "src.building.barracks"
-require "src.building.lab"
-Logic = require "src.game.logic"
 
 -- Creates a proxy via rawset.
 -- Credit goes to vrld: https://github.com/vrld/Princess/blob/master/main.lua

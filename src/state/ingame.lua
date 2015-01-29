@@ -3,13 +3,20 @@ state_ingame = Gamestate.new()
 
 tiles = nil -- contains map
 
+Hud = require "src.view.hud"
+Game = require "src.game.gamestate"
+Camera = require "src.view.camwrapper"
+Logic = require "src.game.logic"
+
+require "src.building.building"
+require "src.building.corridor"
+require "src.building.housing"
+require "src.building.barracks"
+require "src.building.lab"
+
 
 -- if not nil, it contains the building the player wants to build
 local buildmode = nil
-
-local menu_open = {
-    build = false
-}
 
 
 -- Called once whenever entering state
@@ -20,6 +27,7 @@ function state_ingame:enter()
     Camera.init()
     Camera.focusMapPos(5, 5)
     Game.init()
+    Hud.init(Game)
     
     -- generate/load tile grid
     -- TODO: remove placeholder grid and load from map file/generator
@@ -37,58 +45,7 @@ end
 function state_ingame:update(dt)
     
     Camera.update(dt)
-    
-    -- update hud
-    if not buildmode then
-        
-        Gui.group.push{grow = "down", pos = {screen.w - 100, 0}}
-        if Gui.Button{id = "btn_build", text = "Build"} then
-            menu_open.build = not menu_open.build
-        end
-        Gui.group.pop{}
-        
-        -- build menu if opened
-        if menu_open.build then
-            Gui.group.push{grow = "down", pos = {screen.w - 200, 0}}
-                        
-            if Gui.Button{id = "btn_build_corridor", text = "Corridor"} then
-                buildmode = Corridor()
-                menu_open.build = false
-            end
-            
-            if Gui.Button{id = "btn_build_housing", text = "Housing"} then
-                buildmode = Housing()
-                menu_open.build = false
-            end
-            
-            if Gui.Button{id = "btn_build_barracks", text = "Barracks"} then
-                buildmode = Barracks()
-                menu_open.build = false
-            end
-            
-            if Gui.Button{id = "btn_build_labs", text = "Labs"} then
-                buildmode = Laboratory()
-                menu_open.build = false
-            end
-            
-            Gui.group.pop{}
-        end
-        
-        -- Turn counter and other stuff
-        Gui.group.push{grow = "right", pos = {screen.w - 100, screen.h - 30}}
-        if Gui.Button{id = "btn_turn", text = "End Turn"} then
-            Game.endTurn()
-        end
-        Gui.group.pop{}
-        
-        -- Debug information
-        Gui.group.push{grow = "down", pos = {0, 0}}
-        Gui.Label{text = "FPS: " .. love.timer.getFPS()}
-        Gui.Label{text = "Turn: " .. Game.getTurn()}
-        Gui.Label{text = "Energy: " .. Game.getEnergy()}
-        Gui.group.pop{}
-        
-    end
+    buildmode = Hud.update(dt, buildmode)
     
 end
 
@@ -134,8 +91,7 @@ function state_ingame:draw()
     
     Camera.detach()
     
-    -- draw hud
-    Gui.core.draw()
+    Hud.draw()
 end
 
 
