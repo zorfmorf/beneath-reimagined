@@ -19,6 +19,7 @@ function state_ingame:enter()
     updateScreen()
     Camera.init()
     Camera.focusMapPos(5, 5)
+    Game.init()
     
     -- generate/load tile grid
     -- TODO: remove placeholder grid and load from map file/generator
@@ -76,15 +77,15 @@ function state_ingame:update(dt)
         -- Turn counter and other stuff
         Gui.group.push{grow = "right", pos = {screen.w - 100, screen.h - 30}}
         if Gui.Button{id = "btn_turn", text = "End Turn"} then
-            
+            Game.endTurn()
         end
         Gui.group.pop{}
         
         -- Debug information
         Gui.group.push{grow = "down", pos = {0, 0}}
-        if Gui.Label{text = "FPS: " .. love.timer.getFPS()} then
-            
-        end
+        Gui.Label{text = "FPS: " .. love.timer.getFPS()}
+        Gui.Label{text = "Turn: " .. Game.getTurn()}
+        Gui.Label{text = "Energy: " .. Game.getEnergy()}
         Gui.group.pop{}
         
     end
@@ -158,10 +159,10 @@ function state_ingame:mousepressed(x, y, button)
         end
     end
     if button == "wu" then
-        --camera:zoom(2)
+        --Camera.zoom(2)
     end
     if button == "wd" then
-        --camera:zoom(0.5)
+        --Camera.zoom(0.5)
     end
 end
 
