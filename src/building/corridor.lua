@@ -3,7 +3,7 @@ Corridor = Class{__includes = Building}
 
 
 function Corridor:init()
-    
+    self.name = "corridor"
 end
 
 

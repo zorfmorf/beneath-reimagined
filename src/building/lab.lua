@@ -2,7 +2,7 @@
 Laboratory = Class{__includes = Building}
 
 function Laboratory:init()
-    
+    self.name = "lab"
 end
 
 

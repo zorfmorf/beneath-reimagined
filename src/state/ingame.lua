@@ -13,6 +13,7 @@ require "src.building.corridor"
 require "src.building.housing"
 require "src.building.barracks"
 require "src.building.lab"
+require "src.building.cave"
 
 
 -- if not nil, it contains the building the player wants to build
@@ -38,6 +39,7 @@ function state_ingame:enter()
             tiles[x][y] = { z = 0, tile = 4, build = nil}
         end
     end
+    tiles[5][5].build = Cave()
 end
 
 
@@ -83,14 +85,13 @@ function state_ingame:draw()
         my = math.floor(my)
         
         love.graphics.setColor(Color.nbuildable)
-        if Logic.placeable(mx, my) then
+        if Logic.placeable(mx, my, buildmode) then
             love.graphics.setColor(Color.buildable)
         end
         buildmode:draw(convertToScreen(mx, my))
     end
     
     Camera.detach()
-    
     Hud.draw()
 end
 
@@ -101,7 +102,7 @@ function state_ingame:mousepressed(x, y, button)
             local mx, my = convertToMap(Camera.worldCoords(x, y))
             mx = math.floor(mx)
             my = math.floor(my)
-            if Logic.placeable(mx, my) then
+            if Logic.placeable(mx, my, buildmode) then
                 Logic.place(mx, my, buildmode)
                 buildmode = nil
             end

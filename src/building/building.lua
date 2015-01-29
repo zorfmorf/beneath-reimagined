@@ -7,6 +7,12 @@ function Building:init(x, y)
     self.x = x
     self.y = y
     self.cost = {} -- list of key value pairs?
+    self.name = "building"
+end
+
+
+function Building:instanceof(candidate)
+    return self.name == candidate.name
 end
 
 

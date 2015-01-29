@@ -16,6 +16,9 @@ local function update(dt, buildmode)
     if not buildmode then
         
         Gui.group.push{grow = "down", pos = {screen.w - 100, 0}}
+        if Gui.Button{id = "btn_dig", text = "Dig"} then
+            buildmode = Cave()
+        end
         if Gui.Button{id = "btn_build", text = "Build"} then
             menu_open.build = not menu_open.build
         end

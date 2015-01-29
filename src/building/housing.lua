@@ -2,7 +2,7 @@
 Housing = Class{__includes = Building}
 
 function Housing:init()
-    
+    self.name = "housing"
 end
 
 

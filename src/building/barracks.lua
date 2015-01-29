@@ -2,7 +2,7 @@
 Barracks = Class{__includes = Building}
 
 function Barracks:init()
-    
+    self.name = "barracks"
 end
 
 
