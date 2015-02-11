@@ -15,6 +15,7 @@ require "src.building.housing"
 require "src.building.barracks"
 require "src.building.lab"
 require "src.building.cave"
+require "src.building.gate"
 
 
 -- if not nil, it contains the building the player wants to build
@@ -42,7 +43,7 @@ function state_ingame:enter()
     end
     
     builds = {}
-    Logic.place(4, 4, Cave())
+    Logic.place(4, 4, Gate())
     builds[1].buildtime = 0
 end
 
