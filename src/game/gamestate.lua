@@ -8,10 +8,8 @@ local function init()
 end
 
 
-
-
-
 local function endTurn()
+    Logic.endTurn()
     turn = turn + 1
 end
 

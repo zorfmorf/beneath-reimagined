@@ -1,17 +1,14 @@
 
 Cave = Class{__includes = Building}
 
-function Cave:init()
+function Cave:init(x, y)
+    Building.init(self, x, y)
     self.name = "cave"
+    self.buildtime = 10
+    self.img = Image.t_cave
 end
 
 
 function Cave:update(dt)
     
-end
-
-
-function Cave:draw(sx, sy)
-    local img = Image.t_cave
-    self:superdraw(sx, sy, img)
 end

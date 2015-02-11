@@ -2,16 +2,12 @@
 Laboratory = Class{__includes = Building}
 
 function Laboratory:init()
+    Building.init(self, x, y)
     self.name = "lab"
+    self.img = Image.t_lab
 end
 
 
 function Laboratory:update(dt)
     
-end
-
-
-function Laboratory:draw(sx, sy)
-    local img = Image.t_lab
-    self:superdraw(sx, sy, img)
 end

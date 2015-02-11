@@ -2,6 +2,7 @@
 state_ingame = Gamestate.new()
 
 tiles = nil -- contains map
+builds = nil -- list of all buildingsd
 
 Hud = require "src.view.hud"
 Game = require "src.game.gamestate"
@@ -39,7 +40,10 @@ function state_ingame:enter()
             tiles[x][y] = { z = 0, tile = 4, build = nil}
         end
     end
-    tiles[5][5].build = Cave()
+    
+    builds = {}
+    Logic.place(4, 4, Cave())
+    builds[1].buildtime = 0
 end
 
 
@@ -69,10 +73,11 @@ function state_ingame:draw()
                 end
                 
                 love.graphics.draw(Tile[tiles[x][y].tile], sx - grid.w * 0.5, sy)
-                --love.graphics.line(sx, sy, sx + grid.w * 0.5, sy + grid.h * 0.5, sx, sy + grid.h, sx - grid.w * 0.5, sy + grid.h * 0.5, sx, sy)
                 
                 if tiles[x][y].build then
-                    tiles[x][y].build:draw(sx, sy)
+                    local b = builds[tiles[x][y].build]
+                    b:draw(sx, sy)
+                    if b.buildtime > 0 then b:drawBuildtime(sx, sy) end
                 end
             end
         end

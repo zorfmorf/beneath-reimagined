@@ -1,5 +1,7 @@
 -- Capsulates all hud related code.
 
+local hudfont = love.graphics.newFont()
+
 local menu_open = {
     build = false
 }
@@ -72,6 +74,7 @@ end
 
 
 local function draw()
+    love.graphics.setFont(hudfont)
     Gui.core.draw()
 end
 
