@@ -33,7 +33,8 @@ local font = nil
 local color = {
 	normal = {bg = Color.menu_blue_dark, fg = Color.menu_font, border={20,20,20}},
 	hot    = {bg = Color.menu_blue, fg = Color.menu_font,   border={30,30,30}},
-	active = {bg = Color.menu_blue, fg = Color.menu_font,   border={10,10,10}}
+	active = {bg = Color.menu_blue, fg = Color.menu_font,   border={10,10,10}},
+	group = {bg = {88,88,88}, border = {255,255,255}}
 }
 
 -- box drawing
@@ -163,7 +164,6 @@ local function Input(state, text, cursor, x,y,w,h)
 	end
 end
 
-
 local function Checkbox(state, checked, label, align, x,y,w,h)
 	local c = color[state]
 	local bw, bx, by  = math.min(w,h)*.7, x, y
@@ -193,6 +193,16 @@ local function Checkbox(state, checked, label, align, x,y,w,h)
 	love.graphics.print(label, tx, ty)
 end
 
+local function Group(state, bkg, border, x,y,w,h)
+	if bkg then
+		love.graphics.setColor(color.group.bg)
+		love.graphics.rectangle("fill", x, y, w, h)
+	end
+	if border then
+		love.graphics.setColor(color.group.border)
+		love.graphics.rectangle("line", x, y, w, h)
+	end
+end
 
 -- the style
 return {
@@ -205,4 +215,5 @@ return {
 	Slider2D = Slider2D,
 	Input    = Input,
 	Checkbox = Checkbox,
+    Group    = Group,
 }
