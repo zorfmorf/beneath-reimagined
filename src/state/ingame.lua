@@ -8,6 +8,7 @@ Hud = require "src.view.hud"
 Game = require "src.game.gamestate"
 Camera = require "src.view.camwrapper"
 Logic = require "src.game.logic"
+Message = require "src.game.message"
 
 require "src.building.building"
 require "src.building.corridor"
@@ -77,8 +78,7 @@ function state_ingame:draw()
                 
                 if tiles[x][y].build then
                     local b = builds[tiles[x][y].build]
-                    b:draw(sx, sy)
-                    if b.buildtime > 0 then b:drawBuildtime(sx, sy) end
+                    if b.buildtime > 0 then b:drawBuildtime(sx, sy) else b:draw(sx, sy) end
                 end
             end
         end

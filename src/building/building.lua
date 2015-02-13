@@ -4,7 +4,7 @@ Building = Class{}
 
 -- id handling
 local ID_ITERATOR = 1
-local buildfont = love.graphics.newFont(20)
+local buildfont = love.graphics.newFont(12)
 
 function Building:init(x, y)
     self.x = x
@@ -38,5 +38,7 @@ end
 -- draw buildtime. seperate function so that the preview placement drawing is simpler
 function Building:drawBuildtime(sx, sy)
     love.graphics.setFont(buildfont)
+    love.graphics.draw(Image.t_wip, sx - grid.w * 0.5, sy, 0, 1, 1, 0, self.img:getHeight() - grid.h)
+    love.graphics.setColor(Color.buildtime_font)
     love.graphics.print(self.buildtime, sx - grid.w * 0.5 + self.img:getWidth() * 0.5, sy + self.img:getHeight() * 0.5, 0, 1, 1, buildfont:getWidth(tostring(self.buildtime)) * 0.5, buildfont:getHeight() * 0.2)
 end

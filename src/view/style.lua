@@ -34,7 +34,7 @@ local color = {
 	normal = {bg = Color.menu_blue_dark, fg = Color.menu_font, border={20,20,20}},
 	hot    = {bg = Color.menu_blue, fg = Color.menu_font,   border={30,30,30}},
 	active = {bg = Color.menu_blue, fg = Color.menu_font,   border={10,10,10}},
-	group = {bg = {88,88,88}, border = {255,255,255}}
+	group = {bg = Color.menu_blue_dark, border = Color.menu_blue}
 }
 
 -- box drawing

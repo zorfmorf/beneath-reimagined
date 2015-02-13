@@ -64,6 +64,9 @@ local function endTurn()
             if build.buildtime <= 0 then buildFinished(build) end
         end
     end
+    -- create placeholder end of turn message
+    Message.dismiss_all()
+    Message.new{title="Turn "..Game.getTurn().." has ended", mssg="Congratulations on this outstanding achievement commander."}
 end
 
 
